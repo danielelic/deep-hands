@@ -9,7 +9,7 @@ import numpy as np
 from skimage.io import imread
 from sklearn.model_selection import train_test_split
 
-data_path = 'dataset/'
+data_path = 'dataset'
 
 image_rows = 80
 image_cols = 80
@@ -17,10 +17,9 @@ test_percentage = 0.10
 
 
 def create_train_and_test_data():
-    train_data_path = os.path.join(data_path, 'hands1000')
+    train_data_path = os.path.join(data_path, 'hands1000/')
     images = os.listdir(train_data_path)
     total = len(images)
-
     imgs_8bit = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
     ids = []
     imgs_gt = []
@@ -30,12 +29,20 @@ def create_train_and_test_data():
     print('-' * 30)
 
     dictGT = {}
-    with open("dataset/hands1000.csv", 'rb') as features:
+    dictLabel = {}
+
+    dictLabel['neutral'] = 0
+    dictLabel['positive'] = 1
+    dictLabel['negative'] = 2
+
+    csv_data_path = os.path.join(data_path, 'hands1000.csv')
+    with open(csv_data_path, 'rb') as features:
         train = features.readlines()
         for i, line in enumerate(train):
             if (i != 0):
                 f_info = line.decode().split(',')
-                dictGT[f_info[-2].split('/')[-1].split('.')[0]] = f_info[-1]
+                dictGT[f_info[-2].split('/')[-1].split('.')[0]] = \
+                    dictLabel[f_info[-1].replace('\n', '').replace('\r', '').replace('"', '')]
     features.close()
 
     for idx, image_name in enumerate(images):
@@ -77,6 +84,7 @@ def create_subarray(subset_index, total_array):
     result_array = []
     for value in subset_index:
         result_array.append(total_array[value])
+
     return result_array
 
 
@@ -84,6 +92,7 @@ def load_train_data():
     imgs_train = np.load('imgs_train_8bit.npy')
     imgs_train_gt = np.load('imgs_train_gt.npy')
     imgs_train_id = np.load('ids_train.npy')
+
     return imgs_train, imgs_train_gt, imgs_train_id
 
 
