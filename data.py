@@ -15,8 +15,8 @@ data_path = 'dataset'
 image_rows = 80
 image_cols = 80
 
-image_rows_rez = 28
-image_cols_rez = 28
+image_rows_rez = 80
+image_cols_rez = 80
 
 test_percentage = 0.10
 
@@ -55,7 +55,9 @@ def create_train_and_test_data():
 
         imgs_8bit[idx] = np.array([img])
         ids.append(image_name.split('.')[0])
-        imgs_gt.append(dictGT[image_name.split('.')[0]])
+        gt = np.zeros(3)
+        gt[dictGT[image_name.split('.')[0]]] += 1
+        imgs_gt.append(gt)
 
         if idx % 100 == 0:
             print('Done: {0}/{1} images'.format(idx, total))
