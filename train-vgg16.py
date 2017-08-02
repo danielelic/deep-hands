@@ -93,8 +93,8 @@ if __name__ == '__main__':
     print('-' * 30)
     model = getVGG16()
 
-    csv_logger = CSVLogger('log.csv')
-    model_checkpoint = ModelCheckpoint('weights.h5', monitor='accuracy', save_best_only=True)
+    csv_logger = CSVLogger('log-vgg16.csv')
+    model_checkpoint = ModelCheckpoint('weights-vgg16.h5', monitor='accuracy', save_best_only=True)
 
     model.summary()
 
