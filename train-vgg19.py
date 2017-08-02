@@ -19,7 +19,7 @@ img_rows, img_cols = 80, 80
 num_classes = 3
 
 
-def getVGG16(include_top=True, pooling='avg'):
+def getVGG19(include_top=True, pooling='avg'):
     img_input = Input((img_rows, img_cols, 1))
 
     # Block 1
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     print('-' * 30)
     print('Creating and compiling model...')
     print('-' * 30)
-    model = getVGG16()
+    model = getVGG19()
 
     csv_logger = CSVLogger('log-vgg19.csv')
     model_checkpoint = ModelCheckpoint('weights-vgg19.h5', monitor='accuracy', save_best_only=True)
