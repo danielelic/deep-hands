@@ -12,7 +12,7 @@ num_classes = 3
 epochs = 12
 
 # input image dimensions
-img_rows, img_cols = 28, 28
+img_rows, img_cols = 80, 80
 
 # the data, shuffled and split between train and test sets
 x_train, y_train, train_ids = load_train_data()
