@@ -96,7 +96,7 @@ def load_train_data():
     return imgs_train, imgs_train_gt, imgs_train_id
 
 
-def load_test_data(bit_image):
+def load_test_data():
     imgs_test = np.load('imgs_test_8bit.npy')
     imgs_test_gt = np.load('imgs_test_gt.npy')
     imgs_test_id = np.load('ids_test.npy')
