@@ -12,15 +12,11 @@ num_classes = 3
 epochs = 12
 
 # input image dimensions
-img_rows, img_cols = 80, 80
+img_rows, img_cols = 28, 28
 
 # the data, shuffled and split between train and test sets
 x_train, y_train, train_ids = load_train_data()
 x_test, y_test, test_ids = load_test_data()
-
-# (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-print(x_train[0])
 
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)

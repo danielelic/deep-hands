@@ -7,20 +7,24 @@ from random import randint
 
 import numpy as np
 from skimage.io import imread
+from skimage.transform import resize
 from sklearn.model_selection import train_test_split
 
 data_path = 'dataset'
 
 image_rows = 80
 image_cols = 80
-test_percentage = 0.10
 
+image_rows_rez = 28
+image_cols_rez = 28
+
+test_percentage = 0.10
 
 def create_train_and_test_data():
     train_data_path = os.path.join(data_path, 'hands1000/')
     images = os.listdir(train_data_path)
     total = len(images)
-    imgs_8bit = np.ndarray((total, image_rows, image_cols), dtype=np.uint8)
+    imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez), dtype=np.uint8)
     ids = []
     imgs_gt = []
 
@@ -46,7 +50,9 @@ def create_train_and_test_data():
     features.close()
 
     for idx, image_name in enumerate(images):
-        img = imread(os.path.join(train_data_path, image_name), as_grey=True)
+        img = resize(imread(os.path.join(train_data_path, image_name), as_grey=True),
+                     (image_rows_rez, image_cols_rez), preserve_range=True)
+
         imgs_8bit[idx] = np.array([img])
         ids.append(image_name.split('.')[0])
         imgs_gt.append(dictGT[image_name.split('.')[0]])
