@@ -80,7 +80,6 @@ if __name__ == '__main__':
 
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
-    input_shape = (img_rows, img_cols, 1)
 
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
@@ -105,4 +104,4 @@ if __name__ == '__main__':
     print('Fitting model...')
     print('-' * 30)
 
-    model.fit(x_train, y_train, batch_size=32, epochs=20, verbose=1, callbacks=[csv_logger, model_checkpoint])
+    model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1, callbacks=[csv_logger, model_checkpoint])

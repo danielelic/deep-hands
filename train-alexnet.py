@@ -114,4 +114,4 @@ if __name__ == '__main__':
     print('Fitting model...')
     print('-' * 30)
 
-    model.fit(x_train, y_train, batch_size=32, epochs=20, verbose=1, callbacks=[csv_logger, model_checkpoint])
+    model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1, callbacks=[csv_logger, model_checkpoint])
