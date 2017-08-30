@@ -3,7 +3,6 @@
 
 import argparse
 import os
-import sys
 from tkinter import *
 
 from drawing import Map
@@ -23,6 +22,10 @@ def show_legend():
     map.clear_log()
     map.log(txt="0:\tDataset loading\n")
     map.log(txt="L:\tShow legend\n")
+    map.log(txt="1:\tPositive\n")
+    map.log(txt="2:\tNegative\n")
+    map.log(txt="3:\tNeutral\n")
+    map.log(txt="4:\tSkip\n")
     map.log(txt="Esc:\tExit\n")
 
 
@@ -101,6 +104,16 @@ def neutral(event):
     show_image()
 
 
+def skip(event):
+    f = open(args.data, 'a')
+    f.write(os.path.join(args.images, images[0]) + ',' + 'skip' + '\n')
+    f.close()
+
+    del images[0]
+    map.clear_log()
+    map.log(txt=">> 4: {0}: Skip\n\n".format(images[0]))
+    show_image()
+
 def close(event):
     tkmaster.withdraw()  # if you want to bring it back
     sys.exit()  # if you want to exit the entire thing
@@ -123,6 +136,7 @@ def main():
     tkmaster.bind("1", positive)
     tkmaster.bind("2", negative)
     tkmaster.bind("3", neutral)
+    tkmaster.bind("4", skip)
     tkmaster.bind('<Escape>', close)
 
     mainloop()
