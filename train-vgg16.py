@@ -64,7 +64,7 @@ def getVGG16(include_top=True, pooling='avg'):
 
     # Create model.
     model = Model([img_input], [x], name='vgg16')
-    model.compile(loss='binary_crossentropy',
+    model.compile(loss='categorical_crossentropy',
                   optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
                   metrics=['accuracy'])
 
