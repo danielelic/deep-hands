@@ -51,7 +51,7 @@ def create_train_and_test_data():
 
     for idx, image_name in enumerate(images):
         img = resize(imread(os.path.join(train_data_path, image_name), as_grey=True),
-                     (image_rows_rez, image_cols_rez), preserve_range=True)
+                     (image_rows_rez, image_cols_rez), preserve_range=True, mode='constant')
 
         imgs_8bit[idx] = np.array([img])
         ids.append(image_name.split('.')[0])
