@@ -39,7 +39,7 @@ def load_dataset(event):
     map.clear_log()
     map.log(txt=">> 1: Dataset loading\n\n")
     global images, dataset
-    images = sorted(os.listdir(os.path.join(args.images)))
+    images = [k for k in sorted(os.listdir(os.path.join(args.images))) if '.jpg' in k]
     dataset = []
     try:
         with open(args.data, 'rb') as features:
