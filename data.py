@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import argparse
 import os
 from random import randint
 
@@ -9,8 +10,6 @@ import numpy as np
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn.model_selection import train_test_split
-
-data_path = 'dataset'
 
 image_rows = 80
 image_cols = 80
@@ -20,11 +19,9 @@ image_cols_rez = 80
 
 test_percentage = 0.10
 
-def create_train_and_test_data():
-    train_data_path = os.path.join(data_path, 'hands1000/')
-    images = os.listdir(train_data_path)
-    total = len(images)
-    imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez), dtype=np.uint8)
+
+def create_train_and_test_data(images_path, csv_path):
+
     ids = []
     imgs_gt = []
 
@@ -39,18 +36,23 @@ def create_train_and_test_data():
     dictLabel['positive'] = 1
     dictLabel['negative'] = 2
 
-    csv_data_path = os.path.join(data_path, 'hands1000.csv')
-    with open(csv_data_path, 'rb') as features:
+    images = []
+    with open(csv_path, 'rb') as features:
         train = features.readlines()
         for i, line in enumerate(train):
             if (i != 0):
                 f_info = line.decode().split(',')
-                dictGT[f_info[-2].split('/')[-1].split('.')[0]] = \
-                    dictLabel[f_info[-1].replace('\n', '').replace('\r', '').replace('"', '')]
+                if not 'skip' in f_info[-1]:
+                    dictGT[f_info[-2].split('/')[-1].split('.')[0]] = \
+                        dictLabel[f_info[-1].replace('\n', '').replace('\r', '').replace('"', '')]
+                    images.append(f_info[-2].split('/')[-1])
     features.close()
 
+    total = len(images)
+    imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez), dtype=np.uint8)
+
     for idx, image_name in enumerate(images):
-        img = resize(imread(os.path.join(train_data_path, image_name), as_grey=True),
+        img = resize(imread(os.path.join(images_path, image_name), as_grey=True),
                      (image_rows_rez, image_cols_rez), preserve_range=True, mode='constant')
 
         imgs_8bit[idx] = np.array([img])
@@ -112,5 +114,15 @@ def load_test_data():
     return imgs_test, imgs_test_gt, imgs_test_id
 
 
+def main():
+    p = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="")
+    p.add_argument('-images', dest='images', action='store', default='dataset', help='images directory')
+    p.add_argument('-data', dest='data', action='store', default='data.csv', help='data path file *.csv')
+
+    args = p.parse_args()
+
+    create_train_and_test_data(args.images, args.data)
+
+
 if __name__ == '__main__':
-    create_train_and_test_data()
+    main()
