@@ -9,8 +9,16 @@ After this, you can use one of the following nets:
 * vgg19 (`train-vgg19.py`)
 * alexnet (`train-alexnet.py`)
 
+```
+python data.py -images dataset/hands/ [-data data.csv]
+python train-vgg16.py
+python train-vgg19.py
+python train-alexnet.py
+
+```
+
 # annotation-toolbox
 
 ```
-python annotation-toolbox.py -images dataset/hands1000 [-data data.csv]
+python annotation-toolbox.py -images dataset/hands/ [-data data.csv]
 ```
