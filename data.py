@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import argparse
-import os
 from random import randint
 
 import numpy as np
@@ -20,7 +19,7 @@ image_cols_rez = 80
 test_percentage = 0.10
 
 
-def create_train_and_test_data(images_path, csv_path):
+def create_train_and_test_data(csv_path):
 
     ids = []
     imgs_gt = []
@@ -45,20 +44,20 @@ def create_train_and_test_data(images_path, csv_path):
                 if not 'skip' in f_info[-1]:
                     dictGT[f_info[-2].split('/')[-1].split('.')[0]] = \
                         dictLabel[f_info[-1].replace('\n', '').replace('\r', '').replace('"', '')]
-                    images.append(f_info[-2].split('/')[-1])
+                    images.append(f_info[-2])
     features.close()
 
     total = len(images)
     imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez), dtype=np.uint8)
 
     for idx, image_name in enumerate(images):
-        img = resize(imread(os.path.join(images_path, image_name), as_grey=True),
+        img = resize(imread(image_name, as_grey=True),
                      (image_rows_rez, image_cols_rez), preserve_range=True, mode='constant')
 
         imgs_8bit[idx] = np.array([img])
         ids.append(image_name.split('.')[0])
         gt = np.zeros(3)
-        gt[dictGT[image_name.split('.')[0]]] += 1
+        gt[dictGT[image_name.split('/')[-1].split('.')[0]]] += 1
         imgs_gt.append(gt)
 
         if idx % 100 == 0:
@@ -116,12 +115,11 @@ def load_test_data():
 
 def main():
     p = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="")
-    p.add_argument('-images', dest='images', action='store', default='dataset', help='images directory')
     p.add_argument('-data', dest='data', action='store', default='data.csv', help='data path file *.csv')
 
     args = p.parse_args()
 
-    create_train_and_test_data(args.images, args.data)
+    create_train_and_test_data(args.data)
 
 
 if __name__ == '__main__':
