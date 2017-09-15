@@ -22,9 +22,9 @@ def show_legend():
     map.clear_log()
     map.log(txt="0:\tDataset loading\n")
     map.log(txt="L:\tShow legend\n")
-    map.log(txt="1:\tPositive\n")
-    map.log(txt="2:\tNegative\n")
-    map.log(txt="3:\tNeutral\n")
+    map.log(txt="1:\tPositive (hand with product)\n")
+    map.log(txt="2:\tNegative (other)\n")
+    map.log(txt="3:\tNeutral  (only hand)\n")
     map.log(txt="4:\tSkip\n")
     map.log(txt="Esc:\tExit\n")
 
