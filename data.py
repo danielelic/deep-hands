@@ -16,7 +16,7 @@ image_cols = 80
 image_rows_rez = 80
 image_cols_rez = 80
 
-test_percentage = 0.10
+test_percentage = 0.05
 
 
 def create_train_and_test_data(csv_path):
@@ -48,10 +48,11 @@ def create_train_and_test_data(csv_path):
     features.close()
 
     total = len(images)
-    imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez), dtype=np.uint8)
+    channels = 3
+    imgs_8bit = np.ndarray((total, image_rows_rez, image_cols_rez, channels), dtype=np.uint8)
 
     for idx, image_name in enumerate(images):
-        img = resize(imread(image_name, as_grey=True),
+        img = resize(imread(image_name, as_grey=False),
                      (image_rows_rez, image_cols_rez), preserve_range=True, mode='constant')
 
         imgs_8bit[idx] = np.array([img])

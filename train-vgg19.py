@@ -17,10 +17,10 @@ from data import load_train_data, load_test_data
 img_rows, img_cols = 80, 80
 
 num_classes = 3
-
+channels = 3
 
 def getVGG19(include_top=True, pooling='avg'):
-    img_input = Input((img_rows, img_cols, 1))
+    img_input = Input((img_rows, img_cols, channels))
 
     # Block 1
     x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(img_input)
@@ -78,8 +78,8 @@ if __name__ == '__main__':
     x_train, y_train, train_ids = load_train_data()
     x_test, y_test, test_ids = load_test_data()
 
-    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
+    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
 
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
