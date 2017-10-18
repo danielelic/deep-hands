@@ -96,7 +96,7 @@ if __name__ == '__main__':
     model = getVGG19()
 
     csv_logger = CSVLogger('log-vgg19.csv')
-    model_checkpoint = ModelCheckpoint('weights-vgg19.h5', monitor='accuracy', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('weights-vgg19.h5', monitor='acc', save_best_only=True)
 
     model.summary()
 
@@ -105,3 +105,6 @@ if __name__ == '__main__':
     print('-' * 30)
 
     model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1, callbacks=[csv_logger, model_checkpoint])
+
+    scores = model.evaluate(x_test, y_test, verbose=0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
