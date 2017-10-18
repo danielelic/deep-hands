@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+from keras import backend as K
 from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Dense, Conv2D, Flatten, Dropout
 from keras.models import Sequential
@@ -12,6 +13,66 @@ img_rows, img_cols = 80, 80
 
 num_classes = 3
 channels = 3
+
+
+def precision(y_true, y_pred):
+    """Precision metric.
+
+    Only computes a batch-wise average of precision.
+
+    Computes the precision, a metric for multi-label classification of
+    how many selected items are relevant.
+    """
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+
+def recall(y_true, y_pred):
+    """Recall metric.
+
+    Only computes a batch-wise average of recall.
+
+    Computes the recall, a metric for multi-label classification of
+    how many relevant items are selected.
+    """
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+
+def f1score(y_true, y_pred):
+    def recall(y_true, y_pred):
+        """Recall metric.
+
+        Only computes a batch-wise average of recall.
+
+        Computes the recall, a metric for multi-label classification of
+        how many relevant items are selected.
+        """
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+        recall = true_positives / (possible_positives + K.epsilon())
+        return recall
+
+    def precision(y_true, y_pred):
+        """Precision metric.
+
+        Only computes a batch-wise average of precision.
+
+        Computes the precision, a metric for multi-label classification of
+        how many selected items are relevant.
+        """
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+        precision = true_positives / (predicted_positives + K.epsilon())
+        return precision
+
+    precision = precision(y_true, y_pred)
+    recall = recall(y_true, y_pred)
+    return 2 * ((precision * recall) / (precision + recall))
 
 def getAlexNet(heatmap=False):
     model = Sequential()
@@ -78,7 +139,7 @@ def getAlexNet(heatmap=False):
 
     # optimizer=SGD
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy', precision, recall, f1score])
 
     return model
 
@@ -106,7 +167,7 @@ if __name__ == '__main__':
     model = getAlexNet()
 
     csv_logger = CSVLogger('log-alexnet.csv')
-    model_checkpoint = ModelCheckpoint('weights-alexnet.h5', monitor='accuracy', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('weights-alexnet.h5', monitor='acc', save_best_only=True)
 
     model.summary()
 
@@ -114,4 +175,9 @@ if __name__ == '__main__':
     print('Fitting model...')
     print('-' * 30)
 
-    model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1, callbacks=[csv_logger, model_checkpoint])
+    model.fit(x_train, y_train, batch_size=32, epochs=200, verbose=1,
+              validation_split=0.1,
+              callbacks=[csv_logger, model_checkpoint])
+
+    scores = model.evaluate(x_test, y_test, verbose=0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
