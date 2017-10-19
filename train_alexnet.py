@@ -74,7 +74,10 @@ def f1score(y_true, y_pred):
     recall = recall(y_true, y_pred)
     return 2 * ((precision * recall) / (precision + recall))
 
-def getAlexNet(heatmap=False):
+
+def getAlexNet():
+    input_shape = (img_rows, img_cols, channels)
+
     model = Sequential()
 
     # Conv layer 1 output shape (55, 55, 48)
@@ -150,7 +153,6 @@ if __name__ == '__main__':
 
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
-    input_shape = (img_rows, img_cols, channels)
 
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')

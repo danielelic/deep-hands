@@ -76,6 +76,8 @@ def f1score(y_true, y_pred):
 
 
 def getCNN():
+    input_shape = (img_rows, img_cols, channels)
+
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
                      activation='relu',
@@ -101,7 +103,6 @@ if __name__ == '__main__':
 
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
-    input_shape = (img_rows, img_cols, channels)
 
     x_train = x_train.astype('float32')
     x_test = x_test.astype('float32')
