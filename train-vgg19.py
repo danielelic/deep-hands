@@ -104,7 +104,9 @@ if __name__ == '__main__':
     print('Fitting model...')
     print('-' * 30)
 
-    model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1, callbacks=[csv_logger, model_checkpoint])
+    model.fit(x_train, y_train, batch_size=32, epochs=50, verbose=1,
+              validation_data=(x_test, y_test),
+              callbacks=[csv_logger, model_checkpoint])
 
     scores = model.evaluate(x_test, y_test, verbose=0)
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))

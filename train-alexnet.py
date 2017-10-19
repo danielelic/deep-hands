@@ -176,7 +176,7 @@ if __name__ == '__main__':
     print('-' * 30)
 
     model.fit(x_train, y_train, batch_size=32, epochs=200, verbose=1,
-              validation_split=0.1,
+              validation_data=(x_test, y_test),
               callbacks=[csv_logger, model_checkpoint])
 
     scores = model.evaluate(x_test, y_test, verbose=0)
