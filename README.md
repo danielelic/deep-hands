@@ -32,5 +32,31 @@ This is a useful toolbox to annotate a set of images with different classes.
 python annotation-toolbox.py -images dataset/hands/ [-data data.csv]
 ```
 
+# Python Environment Setup
+
+```bash
+sudo apt-get install python3-pip python3-dev python-virtualenv # for Python 3.n
+virtualenv -p python3 venv
+. venv/bin/activate
+```
+
+The preceding command should change your prompt to the following:
+
+```
+(venv)$ 
+```
+Install TensorFlow in the active virtualenv environment:
+
+```bash
+pip3 install --upgrade tensorflow-gpu # for Python 3.n and GPU
+```
+
+Install the others library:
+
+```bash
+pip3 install --upgrade keras scikit-learn scikit-image h5py
+```
+
+
 ## Author
 * Daniele Liciotti | [GitHub](https://github.com/danielelic)
