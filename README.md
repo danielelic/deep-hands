@@ -1,8 +1,12 @@
 # deep-hands
 
-The aim of this project is to classify the type of shelf-interaction.
+The aim of this project is to classify the user-shelf interaction. Three classes are considered:
 
-First of all you need to run `data.py` scirt to generate the `*.npy` files.
+| Neutral | Positive | Negative |
+|:-------:|:--------:|:--------:|
+| ![neutral](images/type_neutral.jpg) | ![positive](images/type_positive.jpg) | ![negative](images/type_negative.jpg) |
+
+In order to generate `*.npy` files, you can run `data.py` script.
 After this, you can use one of the following nets:
 
 * CNN (`train_cnn.py`)
@@ -56,7 +60,6 @@ Install the others library:
 ```bash
 pip3 install --upgrade keras scikit-learn scikit-image h5py
 ```
-
 
 ## Author
 * Daniele Liciotti | [GitHub](https://github.com/danielelic)
