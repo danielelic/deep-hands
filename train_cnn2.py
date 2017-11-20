@@ -1,7 +1,8 @@
 from __future__ import print_function
 
+import keras.preprocessing.image
 from keras import backend as K
-from keras.callbacks import ModelCheckpoint, CSVLogger
+from keras.callbacks import ModelCheckpoint, CSVLogger, ReduceLROnPlateau
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Activation
 from keras.models import Sequential
 from keras.optimizers import SGD
@@ -132,15 +133,34 @@ if __name__ == '__main__':
     csv_logger = CSVLogger('log-cnn2.csv')
     model_checkpoint = ModelCheckpoint('weights-cnn2.h5', monitor='acc', save_best_only=True)
 
+    gen = keras.preprocessing.image.ImageDataGenerator(
+        rotation_range=15.,
+        width_shift_range=0.15,
+        height_shift_range=0.15,
+        shear_range=0.4,
+        zoom_range=0.4,
+        channel_shift_range=0.5,
+        horizontal_flip=True,
+        vertical_flip=False
+    )
+
+    batch_size = 32
+    train_steps = int(x_train.shape[0] / batch_size) + 1
+    validation_steps = int(x_test.shape[0] / 32) + 1
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, verbose=1)
+
     model.summary()
 
     print('-' * 30)
     print('Fitting model...')
     print('-' * 30)
 
-    model.fit(x_train, y_train, batch_size=32, epochs=200, verbose=1,
-              validation_data=(x_test, y_test),
-              callbacks=[csv_logger, model_checkpoint])
+    model.fit_generator(gen.flow(x_train, y_train, batch_size=batch_size, shuffle=True),
+                        steps_per_epoch=train_steps * 10,
+                        epochs=200, verbose=1,
+                        validation_data=gen.flow(x_test, y_test, batch_size=32, shuffle=False),
+                        validation_steps=validation_steps,
+                        callbacks=[csv_logger, model_checkpoint, reduce_lr])
 
     scores = model.evaluate(x_test, y_test, verbose=0)
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
